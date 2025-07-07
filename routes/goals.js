@@ -1,6 +1,6 @@
 const express = require("express")
 const Goal = require("../models/Goal")
-const auth = require("../middleware/auth")
+const { auth } = require("../middleware/auth");
 const { validateGoal } = require("../middleware/validation")
 
 const router = express.Router()

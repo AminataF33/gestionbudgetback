@@ -2,7 +2,7 @@ const express = require("express")
 const Transaction = require("../models/Transaction")
 const Account = require("../models/Account")
 const Category = require("../models/Category")
-const auth = require("../middleware/auth")
+const { auth } = require("../middleware/auth");
 const { validateTransaction } = require("../middleware/validation")
 
 const router = express.Router()

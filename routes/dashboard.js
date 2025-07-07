@@ -4,7 +4,7 @@ const Account = require("../models/Account")
 const Transaction = require("../models/Transaction")
 const Budget = require("../models/Budget")
 const Goal = require("../models/Goal")
-const auth = require("../middleware/auth")
+const { auth } = require("../middleware/auth");
 
 const router = express.Router()
 

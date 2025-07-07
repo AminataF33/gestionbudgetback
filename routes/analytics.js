@@ -1,7 +1,7 @@
 const express = require("express")
 const Transaction = require("../models/Transaction")
 const Budget = require("../models/Budget")
-const auth = require("../middleware/auth")
+const { auth } = require("../middleware/auth");
 
 const router = express.Router()
 
