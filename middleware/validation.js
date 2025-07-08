@@ -151,21 +151,29 @@ const validateAccount = [
 ]
 
 // Validations pour les transactions
+// Dans validation.js
 const validateTransaction = [
+  // Si accountId est un nombre
+  body("accountId").isInt({ min: 1 }).withMessage("ID de compte invalide"),
+  
+  // OU si c'est un MongoId (string)
   body("accountId").isMongoId().withMessage("ID de compte invalide"),
-
-  body("categoryId").isMongoId().withMessage("ID de catégorie invalide"),
-
+  
   body("type").isIn(["income", "expense", "transfer"]).withMessage("Type de transaction non valide"),
-
+  
+  // Pour categoryId, si c'est un MongoId
+  body("categoryId").isMongoId().withMessage("ID de catégorie invalide"),
+  
   body("amount").isFloat({ min: 0.01 }).withMessage("Le montant doit être supérieur à 0"),
-
+  
   body("description")
     .trim()
     .isLength({ min: 1, max: 500 })
     .withMessage("La description doit contenir entre 1 et 500 caractères"),
-
-  body("date").optional().isISO8601().withMessage("Format de date invalide"),
+    
+  // Rendre la date obligatoire si nécessaire
+  body("date").isISO8601().withMessage("Format de date invalide"),
+  
 
   body("merchant")
     .optional()
