@@ -95,9 +95,7 @@ const validateSignup = [
 
 const validateLogin = [
   body("email").isEmail().withMessage("Format d'email invalide").normalizeEmail(),
-
   body("password").notEmpty().withMessage("Le mot de passe est requis"),
-
   handleValidationErrors,
 ]
 
@@ -150,31 +148,44 @@ const validateAccount = [
   handleValidationErrors,
 ]
 
-// Validations pour les transactions
-// Dans validation.js
+// Validations pour les transactions - VERSION CORRIGÉE
 const validateTransaction = [
-  // Si accountId est un nombre
-  body("accountId").isInt({ min: 1 }).withMessage("ID de compte invalide"),
+  // Validation pour accountId - MongoDB ObjectId
+  body("accountId")
+    .notEmpty()
+    .withMessage("L'ID de compte est requis")
+    .isMongoId()
+    .withMessage("ID de compte invalide"),
   
-  // OU si c'est un MongoId (string)
-  body("accountId").isMongoId().withMessage("ID de compte invalide"),
+  // Validation pour categoryId - MongoDB ObjectId
+  body("categoryId")
+    .notEmpty()
+    .withMessage("L'ID de catégorie est requis")
+    .isMongoId()
+    .withMessage("ID de catégorie invalide"),
   
-  body("type").isIn(["income", "expense", "transfer"]).withMessage("Type de transaction non valide"),
+  // Type de transaction
+  body("type")
+    .isIn(["income", "expense", "transfer"])
+    .withMessage("Type de transaction non valide"),
   
-  // Pour categoryId, si c'est un MongoId
-  body("categoryId").isMongoId().withMessage("ID de catégorie invalide"),
+  // Montant
+  body("amount")
+    .isFloat({ min: 0.01 })
+    .withMessage("Le montant doit être supérieur à 0"),
   
-  body("amount").isFloat({ min: 0.01 }).withMessage("Le montant doit être supérieur à 0"),
-  
+  // Description
   body("description")
     .trim()
     .isLength({ min: 1, max: 500 })
     .withMessage("La description doit contenir entre 1 et 500 caractères"),
     
-  // Rendre la date obligatoire si nécessaire
-  body("date").isISO8601().withMessage("Format de date invalide"),
-  
+  // Date
+  body("date")
+    .isISO8601()
+    .withMessage("Format de date invalide"),
 
+  // Champs optionnels
   body("merchant")
     .optional()
     .trim()
@@ -186,13 +197,26 @@ const validateTransaction = [
     .isIn(["cash", "card", "transfer", "mobile_money", "check", "other"])
     .withMessage("Méthode de paiement non valide"),
 
-  body("currency").optional().isIn(["CFA", "EUR", "USD"]).withMessage("Devise non valide"),
+  body("currency")
+    .optional()
+    .isIn(["CFA", "EUR", "USD"])
+    .withMessage("Devise non valide"),
 
-  body("tags").optional().isArray().withMessage("Les tags doivent être un tableau"),
+  body("tags")
+    .optional()
+    .isArray()
+    .withMessage("Les tags doivent être un tableau"),
 
-  body("tags.*").optional().trim().isLength({ max: 50 }).withMessage("Un tag ne peut pas dépasser 50 caractères"),
+  body("tags.*")
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage("Un tag ne peut pas dépasser 50 caractères"),
 
-  body("transferAccountId").optional().isMongoId().withMessage("ID de compte de destination invalide"),
+  body("transferAccountId")
+    .optional()
+    .isMongoId()
+    .withMessage("ID de compte de destination invalide"),
 
   body("notes")
     .optional()
@@ -317,7 +341,6 @@ const validatePagination = [
 // Validations pour les paramètres MongoDB ID
 const validateMongoId = (paramName = "id") => [
   param(paramName).isMongoId().withMessage(`${paramName} invalide`),
-
   handleValidationErrors,
 ]
 
