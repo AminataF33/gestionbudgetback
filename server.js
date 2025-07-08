@@ -1,5 +1,4 @@
 const express = require("express")
-app.set("trust proxy", 1)
 const mongoose = require("mongoose")
 const cors = require("cors")
 const helmet = require("helmet")
@@ -18,6 +17,7 @@ const analyticsRoutes = require("./routes/analytics")
 const dashboardRoutes = require("./routes/dashboard")
 
 const app = express()
+app.set("trust proxy", 1)
 
 // Middleware de sécurité
 app.use(helmet())
